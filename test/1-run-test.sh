@@ -6,7 +6,7 @@
 #
 
 # PARAM
-num_terms=150000					       # number of terms desired for the synthetic data 
+num_terms=150000				       # number of terms desired for the synthetic data 
 num_docs=250000					       # number of docs desired for the synthetic data
 max_run_length=100				       # max number of docs in one run (run=given a term, all the docs with the same score are in 1 run)
 datapath="../data/testdata.tsv"			       # 
