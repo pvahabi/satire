@@ -24,7 +24,7 @@ die "Can't write to $ARGV[4]\n"
     unless open N, ">$ARGV[4]";
 
 
-$SCORE_FLOATING = ARGV[5];                                 # print the score value in a float value - divide the score by $SCORE_FLOATING
+$SCORE_FLOATING = $ARGV[5];                                # print the score value in a float value - divide the score by $SCORE_FLOATING
 for ($t = 0; $t < $ARGV[0]; $t++) {                        # Loop over all the terms, one term per each line
     @doclist = shuffle 0..($ARGV[1] - 1);                  # Have a random ordered list of all the doc ids possible
     $docs_not_output = $ARGV[1];                           # Documents not yet output for this particular term
@@ -39,14 +39,17 @@ for ($t = 0; $t < $ARGV[0]; $t++) {                        # Loop over all the t
 	$run_length = $docs_not_output if ($run_length > $docs_not_output);
 	# $i = 0;  # index into shuffled doc list  CHANGED BY PUYA
 	print T " $score $run_length*";                    # Write the info <score and number of docs> for this run of this term
+	my @dlist;
 	for ($r = 0; $r < $run_length; $r++) {
             $doc_id = $doclist[$i++];
-	    print T " ", $doc_id;                   	   # each run is composed by a set of docs that have same score for this term
-            # PRINT NORMALIZED VERION - PUYA
-            $score_f = $score/$SCORE_FLOATING;
-            print N sprintf("%d\t%d\t%f\n", $t, $doc_id,$score_f); 
-	    # END PRINT NORMALIZED VERSION           
+	    $dlist[$r] = $doc_id;
 	    $docs_not_output--; 			   # to just be sure that we have not yet used all the docs in the dataset
+	}
+        $score_f = $score/$SCORE_FLOATING;
+        my @sorted_dlist = sort { $a <=> $b } @dlist;
+	for ($r = 0; $r < $run_length; $r++) {
+	    print T " ", $dlist[$r];                       # each run is composed by a set of docs that have same score for this term
+            print N sprintf("%d\t%d\t%f\n", $t, $sorted_dlist[$r],$score_f);
 	}
 	print T "#";   					    # Mark the end of the run.
 	$score--;					    # Next run will have 1 score less, so all the scores are ordered
