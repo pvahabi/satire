@@ -6,13 +6,13 @@
 #
 
 # PARAM
-num_terms=150000				       # number of terms desired for the synthetic data 
-num_docs=250000					       # number of docs desired for the synthetic data
-max_run_length=100				       # max number of docs in one run (run=given a term, all the docs with the same score are in 1 run)
+num_terms=50000					       # number of terms desired for the synthetic data 
+num_docs=10000					       # number of docs desired for the synthetic data
+max_run_length=20				       # max number of docs in one run (run=given a term, all the docs with the same score are in 1 run)
 datapath="../data/testdata.tsv"			       # 
 datapath_normalized="../data/testdata_normalized.tsv"  # This is the file of text containing the term \t doc \t scores for each line.
 datapath_query="../data/querytestdata.tsv"             # the path where we save the synthetic query data
-num_queries=100000				       # max number of queries in the synthetic data for testing purpose 
+num_queries=50000				       # max number of queries in the synthetic data for testing purpose 
 max_query_length=4				       # max number of terms in the syntethic data for each query (randomly selected)
 output_stem="test"  				       # This will be the stem of the index files produced.
 lowScoreCutoff=000.1				       # If a quantised term doc score is less than this, it will not be included inthe index.
@@ -26,11 +26,11 @@ k=10						       # The number of ranked results required.
 
 
 echo "Generating synthetic data and queries for $num_terms terms, $num_docs documents and max_run_length=$max_run_length"
-perl ../data/1-generate_test_data.pl $num_terms $num_docs $max_run_length $datapath $datapath_normalized $maxQuantisedValue
+#perl ../data/1-generate_test_data.pl $num_terms $num_docs $max_run_length $datapath $datapath_normalized $maxQuantisedValue
 perl ../data/2-generate_test_queries.pl $num_queries $max_query_length $num_terms $datapath_query
 
 echo "Run the indexer and put the index in the test directory";
-../src/i.exe inputFileName=$datapath_normalized outputStem=$indexStem numDocs=$num_docs lowScoreCutoff=$lowScoreCutoff maxQuantisedValue=$maxQuantisedValue
+#../src/i.exe inputFileName=$datapath_normalized outputStem=$indexStem numDocs=$num_docs lowScoreCutoff=$lowScoreCutoff maxQuantisedValue=$maxQuantisedValue
 
 echo "Run the queries and put the output in the test directory\n\n";
 ../src/q.exe indexStem=$indexStem numDocs=$num_docs debug=$debg postingsCountCutoff=$postingsCountCutoff k=$k lowScoreCutoff=$lowScoreCutoff < $datapath_query > $datapath_query_processed
