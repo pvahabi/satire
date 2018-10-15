@@ -27,7 +27,7 @@ i/i.o: i/i.c /usr/include/stdio.h /usr/include/_stdio.h \
   /usr/include/sys/_types/_ucontext.h \
   /usr/include/sys/_types/_sigset_t.h /usr/include/sys/_types/_uid_t.h \
   /usr/include/sys/resource.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include/stdint.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include/stdint.h \
   /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
   /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
   /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
@@ -74,8 +74,8 @@ i/i.o: i/i.c /usr/include/stdio.h /usr/include/_stdio.h \
   /usr/include/secure/_string.h /usr/include/fcntl.h \
   /usr/include/sys/fcntl.h /usr/include/sys/_types/_o_sync.h \
   /usr/include/sys/_types/_o_dsync.h /usr/include/sys/_types/_seek_set.h \
-  /usr/include/time.h /usr/include/math.h i/../definitions.h i/i.h \
-  i/../u/utility_nodeps.h i/../u/arg_parser.h i/iArgTable.h
+  /usr/include/time.h /usr/include/math.h i/../definitions.h i/./i.h \
+  i/../u/utility_nodeps.h i/../u/arg_parser.h i/./iargTable.h
 
 /usr/include/stdio.h:
 
@@ -177,7 +177,7 @@ i/i.o: i/i.c /usr/include/stdio.h /usr/include/_stdio.h \
 
 /usr/include/sys/resource.h:
 
-/Library/Developer/CommandLineTools/usr/lib/clang/9.1.0/include/stdint.h:
+/Library/Developer/CommandLineTools/usr/lib/clang/10.0.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -333,10 +333,10 @@ i/i.o: i/i.c /usr/include/stdio.h /usr/include/_stdio.h \
 
 i/../definitions.h:
 
-i/i.h:
+i/./i.h:
 
 i/../u/utility_nodeps.h:
 
 i/../u/arg_parser.h:
 
-i/iArgTable.h:
+i/./iargTable.h:

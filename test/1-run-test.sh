@@ -6,8 +6,8 @@
 #
 
 # PARAM
-num_terms=50000					       # number of terms desired for the synthetic data 
-num_docs=10000					       # number of docs desired for the synthetic data
+num_terms=5000					       # number of terms desired for the synthetic data 
+num_docs=25205180			 	       # number of docs desired for the synthetic data
 max_run_length=20				       # max number of docs in one run (run=given a term, all the docs with the same score are in 1 run)
 datapath="../data/testdata.tsv"			       # 
 datapath_normalized="../data/testdata_normalized.tsv"  # This is the file of text containing the term \t doc \t scores for each line.
@@ -27,13 +27,13 @@ k=10						       # The number of ranked results required.
 
 echo "Generating synthetic data and queries for $num_terms terms, $num_docs documents and max_run_length=$max_run_length"
 #perl ../data/1-generate_test_data.pl $num_terms $num_docs $max_run_length $datapath $datapath_normalized $maxQuantisedValue
-perl ../data/2-generate_test_queries.pl $num_queries $max_query_length $num_terms $datapath_query
+#perl ../data/2-generate_test_queries.pl $num_queries $max_query_length $num_terms $datapath_query
 
 echo "Run the indexer and put the index in the test directory";
-#../src/i.exe inputFileName=$datapath_normalized outputStem=$indexStem numDocs=$num_docs lowScoreCutoff=$lowScoreCutoff maxQuantisedValue=$maxQuantisedValue
+python ../dataset/compute_bm25.py ../dataset/ | ../src/i.exe inputFileName=$datapath_normalized outputStem=$indexStem numDocs=$num_docs lowScoreCutoff=$lowScoreCutoff maxQuantisedValue=$maxQuantisedValue
 
 echo "Run the queries and put the output in the test directory\n\n";
-../src/q.exe indexStem=$indexStem numDocs=$num_docs debug=$debg postingsCountCutoff=$postingsCountCutoff k=$k lowScoreCutoff=$lowScoreCutoff < $datapath_query > $datapath_query_processed
+#../src/q.exe indexStem=$indexStem numDocs=$num_docs debug=$debg postingsCountCutoff=$postingsCountCutoff k=$k lowScoreCutoff=$lowScoreCutoff < $datapath_query > $datapath_query_processed
 
 echo "Done."
 

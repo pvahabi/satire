@@ -1,3 +1,4 @@
+// Author: puya.vahabi@gmail.com puyavahabi@berkeley.edu pvahabi@mit.edu
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
@@ -15,12 +16,31 @@
 #include "./i.h"
 #include "../u/utility_nodeps.h"
 #include "../u/arg_parser.h"
-#include "./iArgTable.h"
+#include "./iargTable.h"
 
 #define TWOMEG 2097152
 #define MAX_FGETS 1024  // It only has to be big enough for three numbers.
 
 params_t params;
+
+/* function to read one couple docid, quantized_score */
+int readds(FILE *fp, unsigned int* docid, float* qscore);
+
+int readds(FILE *fp, unsigned int* docid, float* qscore){
+    size_t bytes = 0;
+    // read docid
+    if ((bytes = fread(docid, sizeof(unsigned int), 1, fp)) == 1 ){
+        if (*docid>0){
+            if ((bytes = fread(qscore, sizeof(float), 1, fp)) == 1 ){
+                if (*qscore>0){
+                    printf(" docid: %u, qscore: %f", *docid, *qscore);
+                    putchar ('\n');
+                 } else {fprintf(stderr, "error in reading qscore from file, qscore equal to zero");}
+            } else {fprintf(stderr, "error in reading qscore from file");}
+         } else {fprintf(stderr, "error in reading docid from file, docid equal to zero");}
+    } else {fprintf(stderr, "error in reading docid from file"); }
+    return 0;
+}
 
 static void print_usage(char *progname, arg_t *args) {
   printf("\n\nUsage: %s All of the below options in option=value format."
@@ -45,7 +65,14 @@ int main(int argc, char **argv) {
   CROSS_PLATFORM_FILE_HANDLE vocabh, ifh;
   byte bytebuf[sizeof(u_ll)], *vbuf = NULL, *ibuf = NULL;
   double dscore, start_time = what_time_is_it();
-  
+  size_t pbytes = 0;
+  unsigned int pi, pdocid, ptermid, plength = 0;
+  float pqscore;
+ 
+  if ( (sizeof(unsigned int)) != 4 || (sizeof(float)) != 4 ){
+      fprintf(stderr, "error: number of bytes for unsigned int or float in this platform are not supported");
+  }
+ 
   setvbuf(stdout, NULL, _IONBF, 0);
   
   initialiseParams(&params);
@@ -62,9 +89,11 @@ int main(int argc, char **argv) {
   }
 
   printf("I: Opening the input file, assigning buffers etc.\n");
-  
+ 
+  // Puya - Changing completely the input file
   fgets_buf = (char *)cmalloc(MAX_FGETS, (u_char *)"buffer for fgets()", FALSE);
-  inf = fopen(params.inputFileName, "rb");
+  //inf = fopen(params.inputFileName, "rb");
+  inf = freopen(NULL, "rb", stdin);
   if (inf == NULL) {
     printf("Error: failed to read %s\n", params.inputFileName);
     exit(1);
@@ -104,7 +133,21 @@ int main(int argc, char **argv) {
   free(fname_buf);
   fname_buf = NULL;
 
-  
+  // PUYA 
+  /*ptermid = 0;
+  while( (pbytes = fread(&plength, sizeof(unsigned int), 1, inf)) == 1 ){
+    printf("number of docs: %u for termid: %u",plength, ptermid);
+    // read one unsinged int 
+    if (plength > 0){
+       for (pi = 0; pi < plength; pi++){
+          // we have termid, docid, qscore after here, mv the file pointer
+          readds(inf, &pdocid, &pqscore);
+        }
+     }
+     ptermid++;
+   }*/
+
+ // END 
   while (fgets(fgets_buf, MAX_FGETS, inf) != NULL) {
     if (0) printf("I: Read and process a line.\n");
     lines_read++;
@@ -129,7 +172,6 @@ int main(int argc, char **argv) {
       printf("Error: docid %d in line %s is not in range 0 - %d\n", docid, fgets_buf, params.numDocs - 1);
       exit(1);
     }
-
 
     p = q;
     dscore = strtod(p, &q);
